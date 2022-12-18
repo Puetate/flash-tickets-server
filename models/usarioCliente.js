@@ -1,4 +1,4 @@
-const database = require('../util/database')
+const database = require("../util/database");
 
 module.exports = class UsuarioCliente {
   constructor(
@@ -8,9 +8,9 @@ module.exports = class UsuarioCliente {
     cedula,
     telefono,
     direccion,
-    email,
+    correo,
     contrasenia,
-    usuariocliente
+    usuario
   ) {
     this.id = id;
     this.nombre = nombre;
@@ -18,17 +18,112 @@ module.exports = class UsuarioCliente {
     this.cedula = cedula;
     this.telefono = telefono;
     this.direccion = direccion;
-    this.email = email;
+    this.correo = correo;
     this.contrasenia = contrasenia;
-    this.usuariocliente = usuariocliente;
+    this.usuario = usuario;
   }
 
   static fetchAll() {
-    return database.execute('SELECT * FROM usuariocliente;')
+    return database.execute("SELECT * FROM usuariocliente;");
   }
 
-  static post(nombre,apellido,cedula,telefono,direccion,email,contrasenia,usuariocliente){
-    console.log(nombre,apellido,cedula,telefono,direccion,email,contrasenia,usuariocliente)
-    return database.execute('INSERT INTO usuariocliente (nombre,apellido,cedula,telefono,direccion,email,contrasenia,usuariocliente) VALUES (?,?,?,?,?,?,?,?)', [this.nombre,this.apellido,this.cedula,this.telefono,this.direccion,this.email,this.contrasenia,this.usuariocliente]);
+  static post(
+    nombre,
+    apellido,
+    cedula,
+    telefono,
+    direccion,
+    correo,
+    contrasenia,
+    usuario
+  ) {
+    console.log( nombre,
+      apellido,
+      cedula,
+      telefono,
+      direccion,
+      correo,
+      contrasenia,
+      usuario);
+    return database.execute(
+      "INSERT INTO usuariocliente (nombre,apellido,cedula,telefono,direccion,correo,contrasenia,usuario) VALUES (?,?,?,?,?,?,?,?)",
+      [
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        direccion,
+        correo,
+        contrasenia,
+        usuario,
+      ]
+    );
+  };
+
+  static update(
+    id,
+    nombre,
+    apellido,
+    cedula,
+    telefono,
+    direccion,
+    correo,
+    contrasenia,
+    usuario
+  ) {
+    console.log(
+      id,
+      nombre,
+      apellido,
+      cedula,
+      telefono,
+      direccion,
+      correo,
+      contrasenia,
+      usuario
+    );
+    return database.query(
+      "UPDATE usuariocliente SET nombre = ? , apellido = ? , cedula = ? , telefono = ? , direccion = ? , correo = ? , contrasenia = ?, usuario = ?  WHERE id = ?",
+      [
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        direccion,
+        correo,
+        contrasenia,
+        usuario,
+        id,
+      ],
+      function (err, res) {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+        } else {
+          result(null, res);
+        }
+      }
+    );
   }
+
+  static delete(id) {
+    console.log(id);
+    return database.query(
+      "DELETE FROM usuariocliente WHERE id = ?",
+      [id],
+      function (err, res) {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+        } else {
+          result(null, res);
+        }
+      }
+    );
+  }
+
+  static logeo(correo,contrasenia) {
+    console.log(correo,contrasenia);
+    return database.execute("SELECT * FROM usuariocliente WHERE correo = ? AND contrasenia = ?",[correo,contrasenia]);
+  };
 };
